@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5-Weken Stappenteller</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #33A3B7 0%, #C73487 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            color: #33A3B7;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #C73487;
+            font-size: 1.8em;
+            margin: 30px 0 20px 0;
+        }
+
+        .welcome-screen {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .welcome-screen h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        .welcome-screen p {
+            font-size: 1.3em;
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .input-group {
+            margin: 25px 0;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 1.3em;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .input-group input[type="text"],
+        .input-group input[type="number"],
+        .input-group select {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.2em;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus,
+        .input-group select:focus {
+            outline: none;
+            border-color: #33A3B7;
+        }
+
+        .checkbox-group {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 25px 0;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .checkbox-container input[type="checkbox"] {
+            width: 24px;
+            height: 24px;
+            margin-top: 3px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .checkbox-label {
+            flex: 1;
+        }
+
+        .checkbox-label strong {
+            font-size: 1.2em;
+            color: #333;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .checkbox-label small {
+            color: #666;
+            font-size: 1em;
+            line-height: 1.5;
+            display: block;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            font-size: 1.3em;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin: 10px 5px;
+        }
+
+        .btn-primary {
+            background: #33A3B7;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2a8a9a;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(51, 163, 183, 0.3);
+        }
+
+        .btn-secondary {
+            background: #C73487;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #a82971;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(199, 52, 135, 0.3);
+        }
+
+        .btn-outline {
+            background: white;
+            color: #33A3B7;
+            border: 2px solid #33A3B7;
+        }
+
+        .btn-outline:hover {
+            background: #33A3B7;
+            color: white;
+        }
+
+        .week-selector {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .week-btn {
+            padding: 12px 25px;
+            font-size: 1.2em;
+            background: white;
+            color: #33A3B7;
+            border: 2px solid #33A3B7;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .week-btn:hover {
+            background: #e6f7f9;
+        }
+
+        .week-btn.active {
+            background: #33A3B7;
+            color: white;
+        }
+
+        .day-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .day-btn {
+            padding: 15px;
+            font-size: 1.1em;
+            background: white;
+            color: #C73487;
+            border: 2px solid #C73487;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .day-btn:hover {
+            background: #fce8f3;
+        }
+
+        .day-btn.active {
+            background: #C73487;
+            color: white;
+        }
+
+        .day-btn.has-data {
+            background: linear-gradient(135deg, #33A3B7 0%, #C73487 100%);
+            color: white;
+            border: none;
+        }
+
+        .add-steps-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 25px 0;
+        }
+
+        .current-steps {
+            font-size: 1.5em;
+            color: #33A3B7;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+        }
+
+        .activity-section {
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 2px solid #ddd;
+        }
+
+        .activity-inputs {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .chart-container {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            height: 400px;
+        }
+
+        canvas {
+            max-width: 100%;
+        }
+
+        .admin-panel {
+            margin-top: 30px;
+        }
+
+        .participant-list {
+            display: grid;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .participant-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #ddd;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .participant-card:hover {
+            border-color: #33A3B7;
+            box-shadow: 0 5px 15px rgba(51, 163, 183, 0.2);
+        }
+
+        .participant-card h3 {
+            color: #33A3B7;
+            margin-bottom: 10px;
+        }
+
+        .participant-stats {
+            display: flex;
+            gap: 20px;
+            font-size: 1.1em;
+            color: #666;
+        }
+
+        .back-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #6c757d;
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            margin-bottom: 20px;
+            cursor: pointer;
+            border: none;
+            font-size: 1.1em;
+        }
+
+        .back-btn:hover {
+            background: #5a6268;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .activity-inputs {
+                grid-template-columns: 1fr;
+            }
+
+            .day-selector {
+                grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="app">
+        <!-- Content will be dynamically generated -->
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Get URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const userId = urlParams.get('id');
+        const isAdmin = urlParams.get('admin') === 'true';
+
+        // Data structure
+        let userData = {
+            name: '',
+            allowTracking: false,
+            weeks: Array(5).fill(null).map(() => 
+                Array(7).fill(null).map(() => ({ steps: 0, activities: [], notes: '' }))
+            )
+        };
+
+        let currentWeek = 0;
+        let currentDay = 0;
+        let chart = null;
+
+        const days = ['Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za', 'Zo'];
+        const activities = {
+            'Fietsen (rustig)': 40,
+            'Fietsen (intensief)': 85,
+            'Zwemmen': 75,
+            'Aerobics/Tuinieren': 80
+        };
+
+        // Load data from localStorage
+        function loadData() {
+            if (userId) {
+                const saved = localStorage.getItem(`steptracker_${userId}`);
+                if (saved) {
+                    userData = JSON.parse(saved);
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        // Save data to localStorage
+        function saveData() {
+            if (userId) {
+                localStorage.setItem(`steptracker_${userId}`, JSON.stringify(userData));
+            }
+        }
+
+        // Generate unique ID
+        function generateUniqueId() {
+            return 'user_' + Math.random().toString(36).substr(2, 9) + Date.now().toString(36);
+        }
+
+        // Initialize app
+        function init() {
+            if (isAdmin) {
+                showAdminPanel();
+            } else if (userId && loadData()) {
+                showTracker();
+            } else {
+                showWelcome();
+            }
+        }
+
+        // Show welcome screen
+        function showWelcome() {
+            document.getElementById('app').innerHTML = `
+                <div class="welcome-screen">
+                    <h1>Welkom bij je Stappenteller!</h1>
+                    <p>Start met het bijhouden van je dagelijkse stappen.<br>Vijf weken lang, elke dag een stap dichter bij je doel!</p>
+                    
+                    <div class="input-group">
+                        <label>Wat is je naam?</label>
+                        <input type="text" id="userName" placeholder="Vul je naam in" style="max-width: 400px; margin: 0 auto;">
+                    </div>
+
+                    <p style="color: #666; font-size: 1.1em; margin: 25px auto; max-width: 600px;">
+                        Je kunt aan het eind van elke week zelf kiezen of je je resultaten met Astrid wilt delen via email.
+                    </p>
+
+                    <button class="btn btn-primary" onclick="startTracking()">Start met stappen tellen</button>
+                </div>
+            `;
+        }
+
+        // Start tracking
+        function startTracking() {
+            const name = document.getElementById('userName').value.trim();
+
+            if (!name) {
+                alert('Vul eerst je naam in!');
+                return;
+            }
+
+            userData.name = name;
+            userData.allowTracking = true; // Always true now since they can choose per week
+
+            // Generate new user ID if not present
+            if (!userId) {
+                const newId = generateUniqueId();
+                // Save data with new ID before redirecting
+                localStorage.setItem(`steptracker_${newId}`, JSON.stringify(userData));
+                window.location.href = `?id=${newId}`;
+                return;
+            }
+
+            saveData();
+            showTracker();
+        }
+
+        // Show tracker interface
+        function showTracker() {
+            const app = document.getElementById('app');
+            app.innerHTML = `
+                <h1>Hoi ${userData.name}!</h1>
+                <p style="text-align: center; font-size: 1.2em; color: #666; margin-bottom: 30px;">Je 5-weken stappenteller</p>
+
+                <h2>Selecteer een week:</h2>
+                <div class="week-selector">
+                    ${Array(5).fill(0).map((_, i) => 
+                        `<button class="week-btn ${i === currentWeek ? 'active' : ''}" onclick="selectWeek(${i})">Week ${i + 1}</button>`
+                    ).join('')}
+                </div>
+
+                <h2>Selecteer een dag:</h2>
+                <div class="day-selector">
+                    ${days.map((day, i) => {
+                        const hasData = userData.weeks[currentWeek][i].steps > 0;
+                        return `<button class="day-btn ${i === currentDay ? 'active' : ''} ${hasData ? 'has-data' : ''}" onclick="selectDay(${i})">${day}</button>`;
+                    }).join('')}
+                </div>
+
+                <div class="add-steps-section">
+                    <h2>📊 Stappen voor ${days[currentDay]}</h2>
+                    <div class="current-steps">
+                        Totaal vandaag: <span id="currentSteps">${getTotalSteps(currentWeek, currentDay).toLocaleString()}</span> stappen
+                    </div>
+
+                    <div class="input-group">
+                        <label>Hoeveel stappen heb je gezet?</label>
+                        <input type="number" id="stepsInput" placeholder="Bijv. 8000" min="0">
+                    </div>
+                    <button class="btn btn-primary" onclick="addSteps()">Stappen toevoegen</button>
+
+                    <div class="input-group" style="margin-top: 25px;">
+                        <label>📝 Notities van vandaag (optioneel)</label>
+                        <textarea id="notesInput" placeholder="Bijv. 'Visite gehad' of 'Ziek geweest'" style="width: 100%; padding: 15px; font-size: 1.1em; border: 2px solid #ddd; border-radius: 10px; min-height: 80px; font-family: inherit; resize: vertical;"></textarea>
+                    </div>
+                    <button class="btn btn-secondary" onclick="saveNotes()">Notities opslaan</button>
+
+                    <div class="activity-section">
+                        <h2>➕ Extra activiteiten</h2>
+                        <p style="color: #666; margin-bottom: 15px;">Deze activiteiten worden automatisch omgerekend naar stappen</p>
+                        
+                        <div class="activity-inputs">
+                            <div class="input-group" style="margin: 0;">
+                                <label>Activiteit:</label>
+                                <select id="activityType">
+                                    ${Object.keys(activities).map(activity => 
+                                        `<option value="${activity}">${activity}</option>`
+                                    ).join('')}
+                                </select>
+                            </div>
+                            <div class="input-group" style="margin: 0;">
+                                <label>Minuten:</label>
+                                <input type="number" id="activityMinutes" placeholder="30" min="1">
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary" onclick="addActivity()">Activiteit toevoegen</button>
+
+                        <div id="activityList"></div>
+                    </div>
+                </div>
+
+                <h2>📈 Je voortgang deze week</h2>
+                <div class="chart-container">
+                    <canvas id="progressChart"></canvas>
+                </div>
+
+                <div style="background: linear-gradient(135deg, rgba(51, 163, 183, 0.1) 0%, rgba(199, 52, 135, 0.1) 100%); padding: 30px; border-radius: 15px; margin: 30px 0;">
+                    <h2 style="margin-top: 0;">🎯 Je voortgang tot nu toe</h2>
+                    <div id="totalProgress"></div>
+                </div>
+
+                <div style="text-align: center; margin: 30px 0; padding: 25px; background: #f8f9fa; border-radius: 15px;">
+                    <h2 style="color: #33A3B7; margin-top: 0;">📧 Deel je week met Astrid</h2>
+                    <p style="color: #666; font-size: 1.1em; margin-bottom: 20px;">Wil je je voortgang van deze week delen? Klik op de knop en je emailprogramma opent automatisch!</p>
+                    <button class="btn btn-primary" onclick="shareWeekWithAstrid()" style="font-size: 1.2em; padding: 18px 40px;">✉️ Email mijn week naar Astrid</button>
+                </div>
+            `;
+
+            updateActivityList();
+            drawChart();
+            updateTotalProgress();
+            updateNotesDisplay();
+        }
+
+        // Save notes
+        function saveNotes() {
+            const notesInput = document.getElementById('notesInput');
+            const notes = notesInput.value.trim();
+
+            userData.weeks[currentWeek][currentDay].notes = notes;
+            saveData();
+
+            alert('Notities opgeslagen! ✅');
+        }
+
+        // Update notes display
+        function updateNotesDisplay() {
+            const notesInput = document.getElementById('notesInput');
+            if (notesInput) {
+                notesInput.value = userData.weeks[currentWeek][currentDay].notes || '';
+            }
+        }
+
+        // Share week with Astrid via email
+        function shareWeekWithAstrid() {
+            const weekData = userData.weeks[currentWeek];
+            const weekNumber = currentWeek + 1;
+            
+            // Calculate week statistics
+            let totalSteps = 0;
+            let daysWithSteps = 0;
+            let emailBody = `Hoi Astrid,%0D%0A%0D%0AHier is mijn overzicht van Week ${weekNumber}:%0D%0A%0D%0A`;
+            
+            // Add daily breakdown
+            emailBody += `📊 STAPPEN PER DAG:%0D%0A`;
+            emailBody += `------------------------%0D%0A`;
+            
+            weekData.forEach((day, index) => {
+                const daySteps = getTotalSteps(currentWeek, index);
+                totalSteps += daySteps;
+                if (daySteps > 0) daysWithSteps++;
+                
+                emailBody += `${days[index]}: ${daySteps.toLocaleString()} stappen`;
+                
+                // Add notes if present
+                if (day.notes) {
+                    emailBody += ` (${day.notes})`;
+                }
+                emailBody += `%0D%0A`;
+                
+                // Add activities if present
+                if (day.activities.length > 0) {
+                    day.activities.forEach(activity => {
+                        emailBody += `   → ${activity.type}: ${activity.minutes} min (+${activity.steps.toLocaleString()} stappen)%0D%0A`;
+                    });
+                }
+            });
+            
+            // Add summary
+            const average = daysWithSteps > 0 ? Math.round(totalSteps / daysWithSteps) : 0;
+            emailBody += `%0D%0A📈 SAMENVATTING:%0D%0A`;
+            emailBody += `------------------------%0D%0A`;
+            emailBody += `Totaal: ${totalSteps.toLocaleString()} stappen%0D%0A`;
+            emailBody += `Gemiddeld: ${average.toLocaleString()} stappen per dag%0D%0A`;
+            emailBody += `Dagen actief: ${daysWithSteps} van de 7%0D%0A`;
+            
+            emailBody += `%0D%0A%0D%0AGroetjes,%0D%0A${userData.name}`;
+            
+            // Create mailto link
+            const subject = `Mijn stappen - Week ${weekNumber} - ${userData.name}`;
+            const mailtoLink = `mailto:contact@witteborgsport.nl?subject=${encodeURIComponent(subject)}&body=${emailBody}`;
+            
+            // Open email client
+            window.location.href = mailtoLink;
+        }
+
+        // Update total progress display
+        function updateTotalProgress() {
+            const progressDiv = document.getElementById('totalProgress');
+            if (!progressDiv) return;
+
+            // Calculate totals
+            let totalSteps = 0;
+            let daysWithData = 0;
+            const weekTotals = [];
+
+            userData.weeks.forEach((week, weekIndex) => {
+                let weekTotal = 0;
+                week.forEach((day, dayIndex) => {
+                    const daySteps = getTotalSteps(weekIndex, dayIndex);
+                    weekTotal += daySteps;
+                    totalSteps += daySteps;
+                    if (daySteps > 0) daysWithData++;
+                });
+                weekTotals.push(weekTotal);
+            });
+
+            const averagePerDay = daysWithData > 0 ? Math.round(totalSteps / daysWithData) : 0;
+
+            // Build HTML
+            let html = `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 25px;">
+                    <div style="background: white; padding: 20px; border-radius: 10px; text-align: center; border: 2px solid #33A3B7;">
+                        <div style="font-size: 2.5em; font-weight: bold; color: #33A3B7;">${totalSteps.toLocaleString()}</div>
+                        <div style="color: #666; margin-top: 5px;">Totaal aantal stappen</div>
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 10px; text-align: center; border: 2px solid #C73487;">
+                        <div style="font-size: 2.5em; font-weight: bold; color: #C73487;">${averagePerDay.toLocaleString()}</div>
+                        <div style="color: #666; margin-top: 5px;">Gemiddeld per dag</div>
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 10px; text-align: center; border: 2px solid #33A3B7;">
+                        <div style="font-size: 2.5em; font-weight: bold; color: #33A3B7;">${daysWithData}</div>
+                        <div style="color: #666; margin-top: 5px;">Dagen ingevuld</div>
+                    </div>
+                </div>
+
+                <div style="background: white; padding: 20px; border-radius: 10px;">
+                    <h3 style="color: #33A3B7; margin-top: 0; margin-bottom: 15px;">📊 Overzicht per week:</h3>
+            `;
+
+            weekTotals.forEach((total, index) => {
+                if (total > 0) {
+                    const percentage = totalSteps > 0 ? Math.round((total / totalSteps) * 100) : 0;
+                    html += `
+                        <div style="margin: 10px 0; padding: 12px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid ${index % 2 === 0 ? '#33A3B7' : '#C73487'};">
+                            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 1.1em;">
+                                <strong>Week ${index + 1}</strong>
+                                <span style="color: #33A3B7; font-weight: bold;">${total.toLocaleString()} stappen</span>
+                            </div>
+                            <div style="color: #666; font-size: 0.95em; margin-top: 5px;">
+                                ${percentage}% van je totaal | Gemiddeld ${Math.round(total / 7).toLocaleString()} per dag
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+
+            if (weekTotals.every(total => total === 0)) {
+                html += '<p style="text-align: center; color: #666; padding: 20px;">Nog geen stappen ingevuld. Start vandaag! 💪</p>';
+            }
+
+            html += '</div>';
+            progressDiv.innerHTML = html;
+        }
+
+        // Select week
+        function selectWeek(week) {
+            currentWeek = week;
+            showTracker();
+        }
+
+        // Select day
+        function selectDay(day) {
+            currentDay = day;
+            showTracker();
+        }
+
+        // Get total steps for a day
+        function getTotalSteps(week, day) {
+            const dayData = userData.weeks[week][day];
+            let total = dayData.steps;
+            dayData.activities.forEach(activity => {
+                total += activity.steps;
+            });
+            return total;
+        }
+
+        // Add steps
+        function addSteps() {
+            const stepsInput = document.getElementById('stepsInput');
+            const steps = parseInt(stepsInput.value);
+
+            if (!steps || steps < 0) {
+                alert('Vul een geldig aantal stappen in!');
+                return;
+            }
+
+            userData.weeks[currentWeek][currentDay].steps = steps;
+            saveData();
+            
+            stepsInput.value = '';
+            showTracker();
+        }
+
+        // Add activity
+        function addActivity() {
+            const activityType = document.getElementById('activityType').value;
+            const minutes = parseInt(document.getElementById('activityMinutes').value);
+
+            if (!minutes || minutes < 1) {
+                alert('Vul een geldig aantal minuten in!');
+                return;
+            }
+
+            const stepsPerMinute = activities[activityType];
+            const totalSteps = minutes * stepsPerMinute;
+
+            userData.weeks[currentWeek][currentDay].activities.push({
+                type: activityType,
+                minutes: minutes,
+                steps: totalSteps
+            });
+
+            saveData();
+            document.getElementById('activityMinutes').value = '';
+            showTracker();
+        }
+
+        // Update activity list
+        function updateActivityList() {
+            const activityList = document.getElementById('activityList');
+            const activities = userData.weeks[currentWeek][currentDay].activities;
+
+            if (activities.length === 0) {
+                activityList.innerHTML = '';
+                return;
+            }
+
+            activityList.innerHTML = `
+                <div style="margin-top: 20px; padding: 15px; background: white; border-radius: 10px;">
+                    <strong style="display: block; margin-bottom: 10px; color: #C73487;">Toegevoegde activiteiten:</strong>
+                    ${activities.map((activity, index) => `
+                        <div style="padding: 10px; margin: 5px 0; background: #f8f9fa; border-radius: 5px; display: flex; justify-content: space-between; align-items: center;">
+                            <span>${activity.type} - ${activity.minutes} min = +${activity.steps.toLocaleString()} stappen</span>
+                            <button onclick="removeActivity(${index})" style="background: #dc3545; color: white; border: none; padding: 5px 15px; border-radius: 5px; cursor: pointer;">Verwijder</button>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        // Remove activity
+        function removeActivity(index) {
+            userData.weeks[currentWeek][currentDay].activities.splice(index, 1);
+            saveData();
+            showTracker();
+        }
+
+        // Draw chart
+        function drawChart() {
+            const ctx = document.getElementById('progressChart');
+            if (!ctx) return;
+
+            // Get all data for current week
+            const weekData = userData.weeks[currentWeek].map((day, index) => getTotalSteps(currentWeek, index));
+
+            if (chart) {
+                chart.destroy();
+            }
+
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: days,
+                    datasets: [{
+                        label: 'Stappen per dag',
+                        data: weekData,
+                        borderColor: '#33A3B7',
+                        backgroundColor: 'rgba(51, 163, 183, 0.1)',
+                        borderWidth: 3,
+                        pointBackgroundColor: '#C73487',
+                        pointBorderColor: '#C73487',
+                        pointRadius: 6,
+                        pointHoverRadius: 8,
+                        tension: 0.3,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            labels: {
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Admin panel functions
+        function showAdminPanel() {
+            document.getElementById('app').innerHTML = `
+                <h1>👨‍💼 Beheerders Dashboard</h1>
+                <p style="text-align: center; font-size: 1.2em; color: #666; margin-bottom: 30px;">Overzicht van alle deelnemers</p>
+
+                <button class="btn btn-primary" onclick="generateLinks()">📥 Download 10 nieuwe links</button>
+
+                <div class="admin-panel">
+                    <h2>Deelnemers die toestemming gaven:</h2>
+                    <div class="participant-list" id="participantList"></div>
+                </div>
+            `;
+
+            loadAllParticipants();
+        }
+
+        function loadAllParticipants() {
+            const participantList = document.getElementById('participantList');
+            const participants = [];
+
+            // Load all participants from localStorage
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.startsWith('steptracker_')) {
+                    const data = JSON.parse(localStorage.getItem(key));
+                    if (data.allowTracking) {
+                        participants.push({
+                            id: key.replace('steptracker_', ''),
+                            data: data
+                        });
+                    }
+                }
+            }
+
+            if (participants.length === 0) {
+                participantList.innerHTML = '<p style="text-align: center; color: #666; padding: 40px;">Nog geen deelnemers met toestemming.</p>';
+                return;
+            }
+
+            participantList.innerHTML = participants.map(participant => {
+                const totalSteps = participant.data.weeks.flat().reduce((sum, day) => sum + getTotalStepsFromData(day), 0);
+                return `
+                    <div class="participant-card" onclick="viewParticipant('${participant.id}')">
+                        <h3>${participant.data.name}</h3>
+                        <div class="participant-stats">
+                            <span>📊 Totaal: ${totalSteps.toLocaleString()} stappen</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function getTotalStepsFromData(dayData) {
+            let total = dayData.steps;
+            dayData.activities.forEach(activity => {
+                total += activity.steps;
+            });
+            return total;
+        }
+
+        function viewParticipant(id) {
+            window.location.href = `?id=${id}`;
+        }
+
+        function generateLinks() {
+            let csv = 'Naam,Unieke Link\n';
+            for (let i = 0; i < 10; i++) {
+                const uniqueId = generateUniqueId();
+                const link = `${window.location.origin}${window.location.pathname}?id=${uniqueId}`;
+                csv += `Deelnemer ${i + 1},${link}\n`;
+            }
+
+            // Download CSV
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'stappenteller_links.csv';
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        // Initialize on load
+        init();
+    </script>
+</body>
+</html>
